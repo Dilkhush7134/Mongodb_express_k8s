@@ -1,17 +1,37 @@
 # Kubernetes - With Mongo & Express App
-Deployment of mongodb application with mongo-express for GUI access 
+Deployment of mongodb application with mongo-express for GUI access.
 
-Create a MongoDB Deployment:
-		mongodb.yml
+Installation STEPS:
 
-	#In the mongodb.yml, we have specified "mongo" as an image, so it will fetch the latest mongo image from the docker hub.
-	#Here we need two ENVIRONMENT Variable. 
-MONGO_INITDB_ROOT_USERNAME & MONGO_INITDB_ROOT_PASSWORD
-To get these values we will create a Secret from where we will reference that value.
+Pre-requisities:
+	1. Download all the files in your Kubernetes cluster.
+	2. You have to specify credentials in secret.yml file . for this follow below steps:
 
-secretKeyRef.name : specifies the name of the secret (which we have defined in Step 2)
+		RUN:
+   	#echo -n 'your_root_username' | base64	#(It will give you an output, paste that output in root user )
+   	#echo -n 'your_root_password' | base64	#(It will give you an output, paste that output in root password )
 
-secretKeyRef.key : specifies the key name which we have declared under the data section in Step 2.
+Do the same process for Admin user.
 
-Please note: Secret must be created before the deployment because this deployment step has dependency over the Secret step.
+Once you done plese run these commands sequence-wise as it is mentioned here : I am talking sequence-wise, reason is there are some dependencies on others so.
+
+	kubectl apply -f secret.yml
+ 	kubectl apply -f mongodb.yml
+  	kubectl apply -f internal-service.yml
+  	kubectl apply -f configmap.yml
+  	kubectl apply -f external-service.yml
+  	kubectl apply -f mongo-express.yml
+
+
+   Verify with below command: All the Pod & services should 1/1
+
+	kubectl get all -o wide
+
+ Now you can Open you browser, and put Ip of any node with port 30000. Login with your credentials whatever you given in secret.
+
+	 for example: 10.0.0.1:30000
+
+  =======Thanks=========
+ 	
+
 
